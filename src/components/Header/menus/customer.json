@@ -1,0 +1,28 @@
+{
+  "nav": [
+    { "id": 0,
+      "text": "主页",
+      "route": "/"
+    },
+    { "id": 1,
+      "text": "产品",
+      "route": "/products"
+    },
+    { "id": 2,
+      "text": "下载专区",
+      "route": "/download"
+    }
+  ],
+  "pop": [
+    {
+      "text": "成为代理商",
+      "icon": "real_estate_agent",
+      "route" : "/beAgent"
+    },
+    {
+      "text": "反馈",
+      "icon": "contact_mail",
+      "route" : "/feedback"
+    }
+  ]
+}

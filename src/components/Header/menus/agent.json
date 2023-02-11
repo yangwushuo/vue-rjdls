@@ -1,0 +1,23 @@
+{
+  "nav": [
+    { "id": 0,
+      "text": "主页",
+      "route": "/"
+    },
+    { "id": 1,
+      "text": "软件产品管理",
+      "route": "/agent_product_manage"
+    },
+    { "id": 2,
+      "text": "工单处理",
+      "route": "/feedbackmanage"
+    },
+    { "id": 3,
+      "text": "充值与退款",
+      "route": "/recharge_refund"
+    }
+  ],
+  "pop": [
+
+  ]
+}

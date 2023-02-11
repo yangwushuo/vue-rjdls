@@ -1,0 +1,21 @@
+[
+  {
+    "id": 0,
+    "title": "主页",
+    "icon": "home_app_logo",
+    "path": "/"
+  },
+  {
+    "id": 1,
+    "title": "课题信息",
+    "icon": "short_text",
+    "path": "/topic"
+  },
+  {
+    "id": 2,
+    "title": "已选课题",
+    "icon": "select_check_box",
+    "path": "/stu/selectedTopic",
+    "children": []
+  }
+]

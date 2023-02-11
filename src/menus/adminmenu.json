@@ -1,0 +1,75 @@
+[
+  {
+    "id": 0,
+    "title": "首页",
+    "icon": "home",
+    "path": "/"
+  },
+  {
+    "id": 1,
+    "title": "用户管理",
+    "icon": "short_text",
+    "path": "/topic"
+  },
+  {
+    "id": 2,
+    "title": "更多管理",
+    "icon": "read_more",
+    "path": "none",
+    "children": [
+      {
+        "id": 2.1,
+        "title": "申报课题",
+        "icon": "short_text",
+        "path": "/topic"
+      },
+      {
+        "id": 2.2,
+        "title": "课题信息",
+        "icon": "short_text",
+        "path": "/topic"
+      },{
+        "id": 2.3,
+        "title": "学生选题",
+        "icon": "short_text",
+        "path": "/topic"
+      }
+      ,{
+        "id": 2.4,
+        "title": "课题任务书",
+        "icon": "short_text",
+        "path": "/topic"
+      }
+      ,{
+        "id": 2.5,
+        "title": "开题报告",
+        "icon": "short_text",
+        "path": "/topic"
+      }
+      ,{
+        "id": 2.6,
+        "title": "中期检查",
+        "icon": "short_text",
+        "path": "/topic"
+      },
+      {
+        "id": 2.7,
+        "title": "论文初稿",
+        "icon": "short_text",
+        "path": "/topic"
+      },
+      {
+        "id": 2.8,
+        "title": "论文定稿",
+        "icon": "short_text",
+        "path": "/topic"
+      },
+      {
+        "id": 2.9,
+        "title": "学生答辩",
+        "icon": "short_text",
+        "path": "/topic"
+      }
+    ]
+  }
+]

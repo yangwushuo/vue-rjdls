@@ -1,0 +1,49 @@
+[
+  {
+    "id": 0,
+    "title": "代理商资质审核",
+    "icon": "preview",
+    "path": "/adminManage/agentQualification"
+  },
+  {
+    "id": 1,
+    "title": "代理商信息管理",
+    "icon": "manage_accounts",
+    "path": "/adminManage/agentInfoManage"
+  },
+  {
+    "id": 2,
+    "title": "普通用户信息管理",
+    "icon": "manage_accounts",
+    "path": "/adminManage/customerInfoManage",
+    "children": []
+  },
+  {
+    "id": 3,
+    "title": "在线退款",
+    "icon": "currency_exchange",
+    "path": "/adminManage/refundOnline",
+    "children": []
+  },
+  {
+    "id": 4,
+    "title": "渠道合作规则设置",
+    "icon": "handshake",
+    "path": "/adminManage/cooperationRules",
+    "children": []
+  },
+  {
+    "id": 5,
+    "title": "处理工单",
+    "icon": "order_approve",
+    "path": "/adminManage/agentFeedBackManage",
+    "children": []
+  },
+  {
+    "id": 6,
+    "title": "通知信息",
+    "icon": "circle_notifications",
+    "path": "/adminManage/notifyInfo",
+    "children": []
+  }
+]
