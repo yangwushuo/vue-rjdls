@@ -14,6 +14,8 @@
           :columns="columns"
           :data="allAgentProduct"
           :loading="tableConfig.loading"
+          :pagination="tableConfig.pagination"
+          @page-change="pageChange"
         >
           <template #introduction="data">
             <div>
@@ -39,7 +41,12 @@
           :footer="drawerConfig.footer"
         >
           <div v-if="drawerConfig.loading">
-            <a-skeleton-line :rows="6" :line-spacing="20" :widths="[300,400,300,400,500,300]" :animation="true"/>
+            <a-skeleton-line
+              :rows="6"
+              :line-spacing="20"
+              :widths="[300, 400, 300, 400, 500, 300]"
+              :animation="true"
+            />
           </div>
           <div v-else>
             <a-descriptions :data="drawerConfig.data" :column="1" size="large">
@@ -97,6 +104,12 @@ export default {
       bordered: false,
       stripe: false,
       loading: false,
+      pagination: {
+        total: 20,
+        current: 1,
+        pageSize: 20,
+        defaultCurrent: 1,
+      },
     });
     const columns = [
       {
@@ -124,22 +137,26 @@ export default {
         title: "￥买断",
         dataIndex: "perpetualFee",
       },
-      {
-        title: "编辑",
-        dataIndex: "edit",
-        slotName: "edit",
-      },
     ];
     let allAgentProduct = ref([]);
 
-    function initData() {
-      console.log("断电");
+    function initData(
+      pageNo = tableConfig.pagination.defaultCurrent,
+      pageSize = tableConfig.pagination.pageSize
+    ) {
       reqAgentProductById({
         id: userstate.userinfo.id,
+        pageNo,
+        pageSize,
       }).then((res) => {
         console.log(res);
         if (res.code == 1) {
-          allAgentProduct.value = res.data;
+          console.log(res);
+          let {total, current, pages } = res.data;
+          tableConfig.pagination.total = total;
+          tableConfig.pagination.current = current;
+          tableConfig.pagination.defaultCurrent = pages;
+          allAgentProduct.value = res.data;          
           checkData();
         }
       });
@@ -174,6 +191,10 @@ export default {
       return timestampFormat(ts);
     }
 
+    function pageChange(num){
+      initData(num);
+    }
+
     watch(
       () => userstate.userinfo,
       (nv, ov) => {
@@ -193,6 +214,7 @@ export default {
       allAgentProduct,
       detail,
       getFormatTime,
+      pageChange
     };
   },
 };

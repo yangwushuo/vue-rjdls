@@ -1,49 +1,48 @@
 [
   {
     "id": 0,
-    "title": "代理商资质审核",
-    "icon": "preview",
-    "path": "/adminManage/agentQualification"
+    "title": "产品管理",
+    "icon": "apps",
+    "path": "/admin_manage/product_manage"
   },
   {
     "id": 1,
-    "title": "代理商信息管理",
-    "icon": "manage_accounts",
-    "path": "/adminManage/agentInfoManage"
+    "title": "代理商资质审核",
+    "icon": "preview",
+    "path": "/admin_manage/agent_qualification"
   },
   {
     "id": 2,
-    "title": "普通用户信息管理",
+    "title": "代理商信息管理",
     "icon": "manage_accounts",
-    "path": "/adminManage/customerInfoManage",
-    "children": []
+    "path": "/admin_manage/agent_info_manage"
   },
   {
     "id": 3,
-    "title": "在线退款",
-    "icon": "currency_exchange",
-    "path": "/adminManage/refundOnline",
+    "title": "普通用户信息管理",
+    "icon": "manage_accounts",
+    "path": "/admin_manage/customer_info_manage",
     "children": []
   },
   {
     "id": 4,
-    "title": "渠道合作规则设置",
-    "icon": "handshake",
-    "path": "/adminManage/cooperationRules",
+    "title": "在线退款",
+    "icon": "currency_exchange",
+    "path": "/admin_manage/refund_online",
     "children": []
   },
   {
     "id": 5,
-    "title": "处理工单",
-    "icon": "order_approve",
-    "path": "/adminManage/agentFeedBackManage",
+    "title": "渠道合作规则设置",
+    "icon": "handshake",
+    "path": "/admin_manage/cooperation_rules",
     "children": []
   },
   {
     "id": 6,
-    "title": "通知信息",
-    "icon": "circle_notifications",
-    "path": "/adminManage/notifyInfo",
+    "title": "处理工单",
+    "icon": "order_approve",
+    "path": "/admin_manage/agent_feedback_manage",
     "children": []
   }
 ]

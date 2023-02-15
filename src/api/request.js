@@ -4,7 +4,7 @@ import axios from 'axios';
 import store from '@/store'
 //使用进度条
 import nprogress from 'nprogress'
-nprogress.configure({  });
+// nprogress.configure({  });
 //引入进度条样式
 import 'nprogress/nprogress.css'
 

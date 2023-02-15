@@ -2,13 +2,13 @@
   <div class="common-layout">
     <el-container>
       <el-header>
-        <Header />
+        <Header/>
       </el-header>
       <el-container>
         <el-main>
           <div class="main-wrapper">
             <!-- <el-skeleton :rows="10" animated /> -->
-              <router-view></router-view>
+            <router-view></router-view>
           </div>
         </el-main>
       </el-container>
@@ -18,7 +18,7 @@
 
 <script>
 import Aside from "@/components/Aside/";
-import { computed } from "@vue/runtime-core";
+import { computed, nextTick, provide, ref } from "@vue/runtime-core";
 import store from "@/store/index";
 
 export default {
@@ -27,9 +27,9 @@ export default {
     Aside,
   },
   setup() {
-    document.title = "软件系统";
+    document.title = "软件代理商系统";
 
-    return {};
+    return { };
   },
 };
 </script>

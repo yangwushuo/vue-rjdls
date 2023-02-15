@@ -32,22 +32,6 @@ export const reqCustomerRegister = (data) => {
   })
 }
 
-// export const reqCustomerInfo = (params) => {
-//   return requests({
-//     url: '/customer/one',
-//     method: 'get',
-//     params
-//   })
-// }
-
-// export const reqAgentInfo = (params) => {
-//   return requests({
-//     url: '/agent/one',
-//     method: 'get',
-//     params
-//   })
-// }
-
 export const reqProducts = (params) => {
   return requests({
     url: '/product',
@@ -178,6 +162,224 @@ export const reqAgentQualification = (params) => {
     params
   })
 }
+
+export const reqPassBusinessLicense = (data) => {
+  return requests({
+    url: '/qualification/audit',
+    method: 'post',
+    data
+  })
+}
+
+export const reqNoPassBusinessLicense = (data) => {
+  return requests({
+    url: '/qualification/audit',
+    method: 'post',
+    data
+  })
+}
+
+export const reqDelBusinessLicense = (data) => {
+  return requests({
+    url: '/qualification',
+    method: 'delete',
+    data
+  })
+}
+
+export const reqAgentInfo = (params) => {
+  return requests({
+    url: '/agent',
+    method: 'get',
+    params
+  })
+}
+
+export const reqUpAgentInfo = (data) => {
+  return requests({
+    url: '/agent',
+    method: 'put',
+    data
+  })
+}
+
+export const reqDelAgent = (data) => {
+  return requests({
+    url: '/agent',
+    method: 'delete',
+    data
+  })
+}
+
+export const reqCustomerInfo = (params) => {
+  return requests({
+    url: '/customer',
+    method: 'get',
+    params
+  })
+}
+
+export const reqUpCustomerInfo = (data) => {
+  return requests({
+    url: '/customer',
+    method: 'put',
+    data
+  })
+}
+
+export const reqDelCustomer = (data) => {
+  return requests({
+    url: '/customer',
+    method: 'delete',
+    data
+  })
+}
+
+export const reqRefundApply = (params) => {
+  return requests({
+    url: '/refundApply',
+    method: 'get',
+    params
+  })
+}
+
+export const reqUpRefundApply = (data) => {
+  return requests({
+    url: '/refundApply/audit',
+    method: 'post',
+    data
+  })
+}
+
+export const reqFeedBackByAdmin = (params) => {
+  return requests({
+    url: '/feedback/admin',
+    method: 'get',
+    params
+  })
+}
+
+export const reqCooperation = (params) => {
+  return requests({
+    url: '/cooperation',
+    method: 'get',
+    params
+  })
+}
+
+export const reqUpCooperation = (params) => {
+  return requests({
+    url: '/cooperation',
+    method: 'put',
+    params
+  }) 
+}
+
+export const reqUpProduct = (data) => {
+  return requests({
+    url: '/product',
+    method: 'put',
+    data
+  })
+}
+
+export const reqAddProduct = (data) => {
+  return requests({
+    url: '/product',
+    method: 'post',
+    data
+  })
+}
+
+export const reqDelProduct = (data) => {
+  return requests({
+    url: '/product',
+    method: 'delete',
+    data
+  })
+}
+
+export const reqAgentProductAssociation = (data) => {
+  return requests({
+    url: '/agent/product',
+    method: 'post',
+    data
+  })
+}
+
+export const reqDelAllocation = (params) => {
+  return requests({
+    url: '/agent/product',
+    method: 'delete',
+    params
+  })
+}
+
+export const reqAgentAllocationProductByProductId = (params) => {
+  return requests({
+    url: '/agent/product/agent',
+    method: 'get',
+    params
+  })
+}
+
+export const reqUpCustomerPwd = (data) => {
+  return requests({
+    url: '/customer/pw',
+    method: 'put',
+    data
+  })
+}
+
+export const reqUpAgentPwd = (data) => {
+  return requests({
+    url: '/agent/pw',
+    method: 'put',
+    data
+  })
+}
+
+export const reqUpCustomerAvatar = (data) => {
+  return requests({
+    url: '/customer/avatar',
+    method: 'put',
+    data
+  })
+}
+
+export const reqUpAgentAvatar = (data) => {
+  return requests({
+    url: '/agent/avatar',
+    method: 'put',
+    data
+  })
+}
+
+export const reqAgentProductOrder = (data) => {
+  return requests({
+    url: '/order/page',
+    method: 'post',
+    data
+  })
+}
+
+export const reqUpCustomerOrder = (params) => {
+  return requests({
+    url: '/order',
+    method: 'put',
+    params
+  })
+}
+
+export const reqCustomerAllProducts = (data) => {
+  return requests({
+    url: '/product/cus',
+    method: 'get',
+    data
+  })
+}
+
+
 
 
 

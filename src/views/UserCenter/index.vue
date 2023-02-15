@@ -10,25 +10,59 @@
       <template #content>
         <div class="info-show">
           <div class="portrait">
-            <el-avatar
-              :size="120"
-              src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
-            />
+            <el-avatar :size="120" :src="userinfo.avatar" />
             <div class="portrait-btns">
-              <a-button-group shape="round" size="mini">
-                <a-button type="outline">修改</a-button>
-                <a-button type="outline">重置</a-button>
-              </a-button-group>
+              <a-upload
+                v-model:file-list="avatarFileList"
+                :auto-upload="false"
+                limit="1"
+                @change="avatarChange"
+                :multiple="false"
+                :show-file-list="false"
+                :show-upload-button="true"
+              >
+                <template #upload-button>
+                  <a-button v-if="userinfo.role != 3" type="primary" shape="round" size="small"
+                    >上传头像</a-button
+                  >
+                </template>
+              </a-upload>
             </div>
           </div>
           <div class="info">
             <a-descriptions
               style="margin-top: 20px"
-              :data="userinfo"
+              :data="userInfoDescriptions"
               :size="medium"
               title="用户信息"
-              :column="2"
-            />
+              :column="1"
+            >
+              <template #value="item">
+                <span>{{ item.value }}</span>
+                <a-button
+                  style="margin: 0 4px"
+                  v-if="item.data.acceptInput == 1 && userinfo.role != '3'"
+                  shape="round"
+                  size="mini"
+                  @click="statusChange(item)"
+                  >填写</a-button
+                >
+                <a-input
+                  v-model:model-value="item.data.value"
+                  v-if="item.data.acceptInput == 2"
+                  size="mini"
+                  style="width: 11rem; margin: 0 4px"
+                ></a-input>
+                <a-button
+                  style="margin: 0 4px"
+                  v-if="item.data.acceptInput == 2"
+                  shape="round"
+                  size="mini"
+                  @click="confirmInfo(item)"
+                  >确认</a-button
+                >
+              </template>
+            </a-descriptions>
           </div>
         </div>
       </template>
@@ -44,7 +78,7 @@
         <div class="security" style="height: 900px">
           <div>
             <a-list size="large" :bordered="false" :split="true">
-              <a-list-item>
+              <a-list-item v-if="userinfo.role != '3'">
                 <ListItem icon="password" title="密码服务">
                   <template #content>
                     <a-button
@@ -158,8 +192,18 @@
 import { reactive, ref, computed } from "@vue/reactivity";
 import ListItem from "@/components/ListItem";
 import { NotificationSuccess, NotificationError } from "@/common/Notification";
-import { reqUpUserPwd } from "@/api/index";
+import {
+  reqFileUpload,
+  reqUpAgentAvatar,
+  reqUpAgentInfo,
+  reqUpAgentPwd,
+  reqUpCustomerAvatar,
+  reqUpCustomerInfo,
+  reqUpCustomerPwd,
+} from "@/api/index";
 import store from "@/store/index";
+import { useDraggable } from "element-plus";
+import { watch } from "@vue/runtime-core";
 export default {
   name: "UserCenter",
   components: {
@@ -167,8 +211,10 @@ export default {
   },
   setup() {
     const userstore = store.state.userstore;
-    var pwdModalVisible = ref(false);
+    let avatarFileList = ref([]);
+    let pwdModalVisible = ref(false);
     const pwdFormRef = ref(null);
+    const userInfoDescriptions = ref([]);
     const pwdForm = reactive({
       oldPwd: "",
       newPwd: "",
@@ -215,65 +261,231 @@ export default {
       if (res.errors) return;
       //按钮加载状态
       pwdForm.upPwdLoading = true;
-
-      reqUpUserPwd({
-        oldPwd: pwdForm.oldPwd,
-        newPwd: pwdForm.newPwd,
-      })
-        .then((res) => {
-          if (res.code == 200) {
-            NotificationSuccess({
-              title: "密码修改成功",
+      if (userinfo.value.role == "1") {
+        reqUpCustomerPwd({
+          phone: userinfo.value.phone,
+          oldPassword: pwdForm.oldPwd,
+          newPassword: pwdForm.newPwd,
+        })
+          .then((res) => {
+            if (res.code == 1) {
+              NotificationSuccess({
+                title: "密码修改成功",
+              });
+              pwdForm.upPwdLoading = false;
+              pwdModalCancel();
+            } else {
+              pwdFormRef.value.setFields({
+                oldPwd: {
+                  status: "error",
+                  message: "旧密码错误",
+                },
+              });
+              pwdForm.upPwdLoading = false;
+            }
+          })
+          .catch((err) => {
+            NotificationError({
+              title: "密码修改失败",
             });
             pwdForm.upPwdLoading = false;
             pwdModalCancel();
-          } else {
-            pwdFormRef.value.setFields({
-              oldPwd: {
-                status: "error",
-                message: "旧密码错误",
-              },
+          });
+      } else if (userinfo.value.role == "2") {
+        reqUpAgentPwd({
+          phone: userinfo.value.phone,
+          oldPassword: pwdForm.oldPwd,
+          newPassword: pwdForm.newPwd,
+        })
+          .then((res) => {
+            if (res.code == 1) {
+              NotificationSuccess({
+                title: "密码修改成功",
+              });
+              pwdForm.upPwdLoading = false;
+              pwdModalCancel();
+            } else {
+              pwdFormRef.value.setFields({
+                oldPwd: {
+                  status: "error",
+                  message: "旧密码错误",
+                },
+              });
+              pwdForm.upPwdLoading = false;
+            }
+          })
+          .catch((err) => {
+            NotificationError({
+              title: "密码修改失败",
             });
             pwdForm.upPwdLoading = false;
-          }
-        })
-        .catch((err) => {
-          NotificationError({
-            title: "密码修改失败",
+            pwdModalCancel();
           });
-          pwdForm.upPwdLoading = false;
-          pwdModalCancel();
-        });
+      } else {
+        pwdForm.upPwdLoading = false;
+      }
     }
+
+    function avatarChange(value) {
+      if (value) {
+        let { file } = value[0];
+        if (file) {
+          let formdata = new FormData();
+          formdata.append("file", file);
+          reqFileUpload(formdata)
+            .then((res) => {
+              if (res.code == 1) {
+                if (userinfo.value.role == "1") {
+                  let req = reqUpCustomerAvatar({
+                    id: userinfo.value.id,
+                    avatar: res.data,
+                  });
+                  return Promise.resolve({ ossurl: res.data, req });
+                } else if (userinfo.value.role == "2") {
+                  let req = reqUpAgentAvatar({
+                    id: userinfo.value.id,
+                    avatar: res.data,
+                  });
+                  return Promise.resolve({ ossurl: res.data, req });
+                }
+              } else {
+                return Promise.reject();
+              }
+            })
+            .then((res) => {
+              let { ossurl, req } = res;
+              console.log(ossurl, req);
+              Promise.race([req])
+                .then((res) => {
+                  console.log(res);
+                  if (res.code == 1) {
+                    NotificationSuccess({
+                      title: "头像修改成功",
+                    });
+                  } else {
+                    return Promise.reject();
+                  }
+                  // 状态管理修改
+                  userstore.userinfo.avatar = ossurl;
+                  //修改本地
+                  let localUserInfo = JSON.parse(
+                    localStorage.getItem("rjdlsInfo")
+                  );
+                  localUserInfo.avatar = ossurl;
+                  localStorage.setItem(
+                    "rjdlsInfo",
+                    JSON.stringify(localUserInfo)
+                  );
+                })
+                .catch((err) => {
+                  NotificationError({
+                    title: "头像修改失败",
+                  });
+                });
+            })
+            .catch((err) => {
+              NotificationError({
+                title: "头像修改失败",
+              });
+            });
+        }
+      }
+      // 清空列表
+      avatarFileList.value = [];
+    }
+
+    function statusChange(item) {
+      console.log(item);
+      item.data.acceptInput = 2;
+    }
+
+    function confirmInfo(item) {
+      item.data.acceptInput = 1;
+      // 判断角色
+      if (userinfo.value.role == "1") {
+        reqUpCustomerInfo({
+          id: userinfo.value.id,
+          cuName: item.data.value,
+        })
+          .then((res) => {
+            if (res.code == 1) {
+              NotificationSuccess({
+                title: "信息更新成功",
+              });
+              // 状态管理修改
+              userstore.userinfo.cuName = item.data.value;
+              //修改本地
+              let localUserInfo = JSON.parse(localStorage.getItem("rjdlsInfo"));
+              localUserInfo.cuName = item.data.value;
+              localStorage.setItem("rjdlsInfo", JSON.stringify(localUserInfo));
+            } else {
+              return Promise.reject();
+            }
+          })
+          .catch((err) => {
+            NotificationError({
+              title: "信息更新失败",
+            });
+          });
+      } else if (userinfo.value.role == "2") {
+        reqUpAgentInfo({
+          id: userinfo.value.id,
+          agentName: item.data.value,
+        })
+          .then((res) => {
+            if (res.code == 1) {
+              NotificationSuccess({
+                title: "信息更新成功",
+              });
+            } else {
+              return Promise.reject();
+            }
+            // 状态管理修改
+            userstore.userinfo.agentName = item.data.value;
+            //修改本地
+            let localUserInfo = JSON.parse(localStorage.getItem("rjdlsInfo"));
+            localUserInfo.agentName = item.data.value;
+            localStorage.setItem("rjdlsInfo", JSON.stringify(localUserInfo));
+          })
+          .catch((err) => {
+            NotificationError({
+              title: "信息更新失败",
+            });
+          });
+      } 
+    }
+
+    watch(
+      () => userstore.userinfo,
+      (nv, ov) => {
+        userInfoDescriptions.value = [
+          {
+            label: "账号",
+            acceptInput: 0,
+            enLabel: "phone",
+            value: nv.phone,
+          },
+          {
+            label: "姓名",
+            acceptInput: 1,
+            enLabel: "name",
+            value: nv.cuName || nv.agentName || nv.adminName,
+          },
+        ];
+      },
+      {
+        immediate: true,
+        deep: true,
+      }
+    );
 
     const userinfo = computed(() => {
       let data = userstore.userinfo;
-      let res =  [
-        {
-          label: "角色",
-          value: data.role,
-        },
-        {
-          label: "账号",
-          value: data.phone,
-        },
-        {
-          label: "姓名",
-          value: data.cuName || data.agentName,
-        },
-      ];
-
-      if(data.role == 2){
-        res.push({
-          label: '账户余额',
-          value: 9999
-        })
-      }
-
-      return res
+      return data;
     });
 
     return {
+      avatarFileList,
       pwdModalVisible,
       pwdFormRef,
       pwdForm,
@@ -281,6 +493,10 @@ export default {
       openPwdModal,
       pwdModalCancel,
       pwdFormSubmit,
+      avatarChange,
+      statusChange,
+      confirmInfo,
+      userInfoDescriptions,
       userinfo,
     };
   },
@@ -291,6 +507,10 @@ export default {
 @import "~@/assets/scss/common.scss";
 .el-divider {
   margin: 1rem 0;
+}
+
+.arco-upload-hide {
+  display: block !important;
 }
 .userc-wrapper {
   width: 100%;
@@ -313,12 +533,11 @@ export default {
       flex-direction: column;
       padding: 0 1rem;
 
-      & .portrait-btns{
+      & .portrait-btns {
         display: flex;
         justify-content: center;
         padding: 5px;
       }
-
     }
     & .info {
       padding: 0 1rem;
@@ -329,5 +548,9 @@ export default {
 .pwd-modal-btns {
   width: 100%;
   text-align: end;
+}
+
+.pwd-modal-content {
+  padding: 0 1rem 0 0;
 }
 </style>

@@ -9,7 +9,11 @@
       <span class="material-symbols-sharp marquee-icon">money_off </span>
       <span class="marquee-text">您的余额不足，请充值</span>
     </span>
-    <icon-close-circle style="color:#9f9fa3;padding:0 5px" :size="23" @click="closeMarquee"/>
+    <icon-close-circle
+      style="color: #9f9fa3; padding: 0 5px"
+      :size="23"
+      @click="closeMarquee"
+    />
   </Vue3Marquee>
   <BSSubHeader
     icon="currency_exchange"
@@ -111,17 +115,14 @@
                   <a-table
                     :columns="payConfig.payHistoryTableColumns"
                     :data="payConfig.payHistoryTableData"
-                    :pagination="false"
                     size="small"
                     :bordered="false"
                     :table-layout-fixed="true"
                     :loading="payConfig.payTableLoading"
-                    :scroll="{y:200}"
-
+                    :pagination="payConfig.pagination"
+                    @page-change="payPageChange"
                   >
-                  <template #empty>
-                      
-                    </template>
+                    <template #empty> </template>
                   </a-table>
                 </template>
               </ListItem>
@@ -207,24 +208,22 @@
                   <a-table
                     :columns="refundConfig.refundHistoryTableColumns"
                     :data="refundConfig.refundHistoryTableData"
-                    :pagination="false"
                     size="small"
                     :bordered="false"
                     :table-layout-fixed="true"
                     :loading="refundConfig.refundTableLoading"
-                    :scroll="{y:200}"
+                    :pagination="refundConfig.pagination"
+                    @page-change="refundPageChange"
                   >
                     <template #status="data">
                       <a-tag
-                        :color="data.record.status == 0 ? '#ff5722' : '#00b42a'"
+                        :color="getStatusObj(data.record.status).color"
                         >{{
-                          data.record.status == 0 ? "审核中" : "已通过"
+                          getStatusObj(data.record.status).text
                         }}</a-tag
                       >
                     </template>
-                    <template #empty>
-
-                    </template>
+                    <template #empty> </template>
                   </a-table>
                 </template>
               </ListItem>
@@ -234,7 +233,7 @@
       </div>
     </template>
   </BSCard>
- </template>
+</template>
 
 <script>
 import ListItem from "@/components/ListItem";
@@ -287,6 +286,12 @@ export default {
           ellipsis: true,
         },
       ],
+      pagination: {
+        total: 10,
+        current: 1,
+        pageSize: 10,
+        defaultCurrent: 1,
+      },
     });
     const refundConfig = reactive({
       open: false,
@@ -317,7 +322,18 @@ export default {
           dataIndex: "refundReason",
           ellipsis: true,
         },
+        {
+          title: "原因",
+          dataIndex: "auditReason",
+          ellipsis: true,
+        },
       ],
+      pagination: {
+        total: 10,
+        current: 1,
+        pageSize: 10,
+        defaultCurrent: 1,
+      },
     });
     const payModalConfig = reactive({
       visible: false,
@@ -339,8 +355,8 @@ export default {
 
     initData();
 
-    function closeMarquee(){
-      closeMarqueeStatus.value = false
+    function closeMarquee() {
+      closeMarqueeStatus.value = false;
     }
 
     function sumbitPay() {
@@ -475,16 +491,25 @@ export default {
       getRefundHistory();
     }
 
-    function getPayHistory() {
+    function getPayHistory(
+      pageNo = payConfig.pagination.defaultCurrent,
+      pageSize = payConfig.pagination.pageSize
+    ) {
       payConfig.payHistoryTableData = [];
       payConfig.payTableLoading = true;
       if (payConfig.open) {
         reqAgentPayHistory({
           agentId: userstore.userinfo.id,
+          pageNo,
+          pageSize,
         })
           .then((res) => {
             if (res.code == 1) {
-              payConfig.payHistoryTableData = res.data.records;
+              let { records, total, current, pages } = res.data;
+              payConfig.pagination.total = total;
+              payConfig.pagination.current = current;
+              payConfig.pagination.defaultCurrent = pages;
+              payConfig.payHistoryTableData = records;
               formatHistory(payConfig.payHistoryTableData);
               payConfig.payTableLoading = false;
             }
@@ -493,17 +518,26 @@ export default {
       }
     }
 
-    function getRefundHistory() {
+    function getRefundHistory(
+      pageNo = refundConfig.pagination.defaultCurrent,
+      pageSize = refundConfig.pagination.pageSize
+    ) {
       refundConfig.refundTableLoading = true;
       refundConfig.refundHistoryTableData = [];
       if (refundConfig.open) {
         reqAgentRefundHistory({
           agentId: userstore.userinfo.id,
+          pageNo,
+          pageSize,
         })
           .then((res) => {
             console.log(Date.now());
             if (res.code == 1) {
-              refundConfig.refundHistoryTableData = res.data.records;
+              let { records, total, current, pages } = res.data;
+              refundConfig.pagination.total = total;
+              refundConfig.pagination.current = current;
+              refundConfig.pagination.defaultCurrent = pages;
+              refundConfig.refundHistoryTableData = records;
               formatHistory(refundConfig.refundHistoryTableData);
               refundConfig.refundTableLoading = false;
             }
@@ -520,6 +554,34 @@ export default {
 
     function getTimeFormat(ts) {
       return timestampFormat(ts);
+    }
+
+    function refundPageChange(num) {
+      getRefundHistory(num);
+    }
+
+    function payPageChange(num) {
+      getPayHistory(num);
+    }
+
+    function getStatusObj(status) {
+      console.log(status);
+      let obj = {
+        color: "",
+        text: "",
+      };
+      if (status == 0) {
+        obj.text = "审核中";
+        obj.color = "#ff5722";
+      } else if (status == 1) {
+        obj.text = "已通过";
+        obj.color = "#00b42a";
+      } else {
+        obj.text = "未通过";
+        obj.color = "#ff0000";
+      }
+
+      return obj;
     }
 
     watch(
@@ -554,6 +616,9 @@ export default {
       checkPayHistory,
       checkRefundHistory,
       getTimeFormat,
+      refundPageChange,
+      payPageChange,
+      getStatusObj
     };
   },
 };

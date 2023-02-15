@@ -1,39 +1,58 @@
 import {
-  reqCustomerProducts,
-  reqProducts
+  reqCustomerAllProducts,
+  reqCustomerProducts
 } from '@/api/index'
 import _ from 'lodash'
 const actions = {
   async getProducts({
     commit
   }, data) {
-    let res = await reqProducts(data)
-    if(res.code == 1){
-      console.log(res);
+    let res = await reqCustomerAllProducts(data)
+    if (res.code == 1) {
+      let {
+        total,
+        current,
+        pages
+      } = res.data;
       commit('PRODUCTS', res.data)
-    }else{
+      return Promise.resolve({
+        total,
+        current,
+        pages
+      });
+    } else {
       return Promise.reject(new Error("get products failed"))
     }
   },
-  
+
   async getCostumerProducts({
     commit
-  }, data){
+  }, data) {
+    console.log(data);
     let res = await reqCustomerProducts(data)
-    if(res.code == 1){
-      console.log(res)
+    if (res.code == 1) {
+      let {
+        total,
+        current,
+        pages
+      } = res.data;
       commit('COSTOMERPRODUCTS', res.data)
-    }else{
+      return Promise.resolve({
+        total,
+        current,
+        pages
+      });
+    } else {
       return Promise.reject(new Error("get costumer products failed"))
     }
   }
 }
 
 const mutations = {
-  PRODUCTS(state, data){ 
+  PRODUCTS(state, data) {
     state.products = data
   },
-  COSTOMERPRODUCTS(state, data){
+  COSTOMERPRODUCTS(state, data) {
     state.costumerProducts = data
   }
 }

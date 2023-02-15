@@ -55,6 +55,7 @@ const actions = {
     if (userinfo) {
       commit('USERINFO', userinfo);
     } else {
+      commit('USERINFO', {});
       return Promise.reject(new Error("get userinfo failed"))
     }
 

@@ -2,14 +2,17 @@
   "nav": [
     { "id": 0,
       "text": "主页",
+      "name": "index",
       "route": "/"
     },
     { "id": 1,
       "text": "产品",
+      "name": "products",
       "route": "/products"
     },
     { "id": 2,
       "text": "下载专区",
+      "name": "download",
       "route": "/download"
     }
   ],
@@ -17,7 +20,7 @@
     {
       "text": "成为代理商",
       "icon": "real_estate_agent",
-      "route" : "/beAgent"
+      "route" : "/be_agent"
     },
     {
       "text": "反馈",

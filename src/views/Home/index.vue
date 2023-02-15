@@ -9,7 +9,7 @@
     <BSCard>
       <template #content>
         <div class="wrapper">
-          <div class="title"><span>欢迎使用 RJDLS</span></div>
+          <div class="title"><span>软件产品代理商系统</span></div>
           <div class="carousel">
             <a-carousel
               :autoPlay="true"
@@ -18,7 +18,7 @@
               indicator-position="outer"
               :style="{
                 width: '100%',
-                height: '450px',
+                height:'65vh',
               }"
             >
               <a-carousel-item
@@ -46,10 +46,10 @@ export default {
   name: "Home",
   setup() {
     const images = [
-      "https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/cd7a1aaea8e1c5e3d26fe2591e561798.png~tplv-uwbnlip3yd-webp.webp",
-      "https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/6480dbc69be1b5de95010289787d64f1.png~tplv-uwbnlip3yd-webp.webp",
-      "https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/0265a04fddbd77a19602a15d9d55d797.png~tplv-uwbnlip3yd-webp.webp",
-      "https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/24e0dd27418d2291b65db1b21aa62254.png~tplv-uwbnlip3yd-webp.webp",
+      "https://bs-medical-oss.oss-cn-hangzhou.aliyuncs.com/product/1%20(1).jpg",
+      "https://bs-medical-oss.oss-cn-hangzhou.aliyuncs.com/product/1%20(2).jpg",
+      "https://bs-medical-oss.oss-cn-hangzhou.aliyuncs.com/product/1%20(3).jpg",
+      "https://bs-medical-oss.oss-cn-hangzhou.aliyuncs.com/product/1%20(4).jpg",
     ];
     return {
       images,
@@ -65,10 +65,13 @@ export default {
 
   & .title{
     padding: 1rem;
-    font-family:  "Chillax-Bold", '微软雅黑' ;
+    font-family:Arial, Helvetica, sans-serif;
     font-weight: bold;
     font-size: 6rem;
     text-align: center;
+    background-image:linear-gradient(0deg,#30cfd0 0%, #330867 100%);
+    color:transparent;
+    background-clip:text;
   }
 
   & .carousel{

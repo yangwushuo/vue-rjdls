@@ -9,12 +9,12 @@
         <a-menu
           mode="horizontal"
           style="height: 100%"
-          :selected-keys="selectNavId"
+          :selected-keys="parentPathNow"
         >
           <a-menu-item
             v-for="item in navInfo.nav"
-            :key="item.id+''"
-            @click="goRoute(item.route,item.id)"
+            :key="item.name"
+            @click="goRoute(item.route, item.id)"
             >{{ item.text }}</a-menu-item
           >
         </a-menu>
@@ -23,7 +23,7 @@
     <div class="right-wrapper">
       <div v-if="userinfo.id" class="isLogin">
         <div class="btns">
-          <span class="material-symbols-sharp">notifications</span>
+          <!-- <span class="material-symbols-sharp">notifications</span> -->
         </div>
         <div class="portrait">
           <a-dropdown trigger="hover">
@@ -61,7 +61,9 @@
             <template #icon>
               <icon-user />
             </template>
-            {{ userinfo.cuName || userinfo.agentName || userinfo.adminName }}</a-tag
+            {{
+              userinfo.cuName || userinfo.agentName || userinfo.adminName
+            }}</a-tag
           >
         </div>
       </div>
@@ -76,7 +78,7 @@
 </template>
 
 <script>
-import { computed, ref } from "@vue/runtime-core";
+import { computed, inject} from "@vue/runtime-core";
 import store from "@/store/index";
 import { useRoute, useRouter } from "vue-router";
 import { IconExport, IconUser } from "@arco-design/web-vue/es/icon";
@@ -96,19 +98,23 @@ export default {
       };
     });
 
-    const navInfo = computed(()=>{
-      if(userstore.userinfo.role == "1"){
-        return require('./menus/customer.json')
-      }else if(userstore.userinfo.role == "2"){
-        return require('./menus/agent.json')
-      }else if(userstore.userinfo.role == "3"){
-        return require('./menus/admin.json')
-      }else{
-        return require('./menus/other.json')
+    const parentPathNow = computed(() => {
+      if (route.matched[0]) {
+        return route.matched[0].name;
       }
-    })
+    });
 
-    const selectNavId = ref(0);
+    const navInfo = computed(() => {
+      if (userstore.userinfo.role == "1") {
+        return require("./menus/customer.json");
+      } else if (userstore.userinfo.role == "2") {
+        return require("./menus/agent.json");
+      } else if (userstore.userinfo.role == "3") {
+        return require("./menus/admin.json");
+      } else {
+        return require("./menus/other.json");
+      }
+    });
 
     function goto(path) {
       router.push(path);
@@ -120,29 +126,29 @@ export default {
         "satoken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
       //重新刷新页面
       localStorage.removeItem("rjdlsInfo");
-      router.go(0);
+      store.dispatch("userstore/getUserInfo").then(res => {
+        router.push('/')
+      }).catch(err => {
+        router.push('/')
+      })
     }
 
     function goLogin() {
       router.push("/login");
     }
 
-    function goRoute(route,id){
-      selectNavId.value = id+'';
-      console.log(selectNavId);
-      router.push(route)
+    function goRoute(route) {
+      router.push(route);
     }
-
-    
 
     return {
       userinfo,
       navInfo,
-      selectNavId,
+      parentPathNow,
       goto,
       logout,
       goLogin,
-      goRoute
+      goRoute,
     };
   },
 };

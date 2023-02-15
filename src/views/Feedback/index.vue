@@ -9,7 +9,7 @@
     <template #content>
       <a-form :model="form" :style="{ width: '600px' }" @submit="handleSubmit">
         <a-form-item field="identityCard" label="已购买产品">
-          <a-radio-group @change="selectPro">
+          <a-radio-group @change="selectPro" v-model:model-value="form.productId">
             <template v-for="item in customerProducts" :key="item.productId">
               <div style="padding-bottom: 10px">
                 <a-radio :value="item.productId">
@@ -102,15 +102,14 @@ export default {
         customerId: userstore.userinfo.id,
       })
         .then((res) => {
+          console.log(res);
           formLoading.value = false;
           if (res.code == 1) {
             NotificationSuccess({
               title: "反馈成功",
             });
           } else {
-            NotificationError({
-              title: "反馈失败",
-            });
+            return Promise.reject();
           }
         })
         .catch((err) => {

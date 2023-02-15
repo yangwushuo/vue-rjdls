@@ -1,23 +1,35 @@
 {
   "nav": [
-    { "id": 0,
+    {
+      "id": 0,
       "text": "主页",
+      "name": "index",
       "route": "/"
     },
-    { "id": 1,
+    {
+      "id": 1,
       "text": "软件产品管理",
+      "name": "agent_product_manage",
       "route": "/agent_product_manage"
     },
-    { "id": 2,
-      "text": "工单处理",
-      "route": "/feedbackmanage"
+    {
+      "id": 2,
+      "text": "客户订单",
+      "name": "agent_product_order",
+      "route": "/agent_product_order"
     },
-    { "id": 3,
+    {
+      "id": 3,
+      "text": "工单处理",
+      "name": "feedback_manage",
+      "route": "/feedback_manage"
+    },
+    {
+      "id": 4,
       "text": "充值与退款",
+      "name": "recharge_refund",
       "route": "/recharge_refund"
     }
   ],
-  "pop": [
-
-  ]
+  "pop": []
 }

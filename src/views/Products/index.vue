@@ -79,8 +79,7 @@
                 </span>
               </template>
               <template #avatar>
-                年费:{{ item.annualFee }}￥ 永久:{{ item.perpetualFee }}￥
-                上架:{{ getFormatTime(item.createTime) }}
+                年费:{{ item.annualFee }}￥ 永久:{{ item.perpetualFee }}
               </template>
             </a-card-meta>
           </a-card>
@@ -96,9 +95,8 @@
             :total="pageConfig.total"
             v-model:current="pageConfig.current"
             v-model:page-size="pageConfig.pageSize"
-            show-page-size
-            @change="changePageNum"
-            @page-size-change="changePageSize"
+            :show-page-size="false"
+            @change="pageChange"
           />
         </div>
       </div>
@@ -111,6 +109,7 @@
       @ok="drawerOk"
       @cancel="drawerCancel"
       placement="right"
+      :footer="false"
       unmountOnClose
     >
       <template #title>
@@ -142,8 +141,8 @@
   </div>
   <a-modal
     :visible="payModalConfig.visible"
-    ok-text="确认支付"
-    cancel-text="取消支付"
+    ok-text="确认提交"
+    cancel-text="取消提交"
     :ok-loading="payModalConfig.loading"
     @ok="payModalOk"
     @cancel="payModalCancel"
@@ -155,8 +154,8 @@
         <a-radio value="1">年费</a-radio>
         <a-radio value="2">买断</a-radio>
       </a-radio-group>
-      <img style="width: 200px" src="./img/qrcode.png" alt="pagpic" />
-      <span>支付金额: {{ getPayMoney() }}</span>
+      <!-- <img style="width: 200px" src="./img/qrcode.png" alt="pagpic" /> -->
+      <!-- <span>支付金额: {{ getPayMoney() }}</span> -->
     </div>
   </a-modal>
 </template>
@@ -166,7 +165,7 @@ import store from "@/store/index";
 import { computed, reactive, ref } from "@vue/runtime-core";
 import { timestampFormat } from "@/utils/timeUtil";
 import { IconPlus } from "@arco-design/web-vue/es/icon";
-import { MessageSuccess, MessageWarning } from "@/common/Message";
+import { MessageWarning } from "@/common/Message";
 import { reqOrder } from "@/api";
 import { NotificationError, NotificationSuccess } from "@/common/Notification";
 export default {
@@ -175,15 +174,14 @@ export default {
     IconPlus,
   },
   setup() {
-    // 获取所有产品
-    store.dispatch("productstore/getProducts");
     const productstate = store.state.productstore;
     const userstate = store.state.userstore;
 
     const pageConfig = reactive({
-      total: 200,
+      total: 20,
       current: 1,
-      pageSize: 10,
+      pageSize: 20,
+      defaultCurrent: 1,
     });
 
     const drawerConfig = reactive({
@@ -231,12 +229,11 @@ export default {
     }
 
     function addShop(pro) {
-
-      if(shop.select.length == 1){
+      if (shop.select.length == 1) {
         MessageWarning({
-          content: '请单个购买'
-        })
-        return 
+          content: "请单个购买",
+        });
+        return;
       }
 
       shop.select.push(pro);
@@ -266,7 +263,7 @@ export default {
         MessageWarning({
           content: "请先选择商品，再购买",
         });
-        return 
+        return;
       }
 
       payModalConfig.visible = true;
@@ -302,16 +299,16 @@ export default {
           NotificationSuccess({
             title: "购买成功",
           });
-          shop.select = []
+          shop.select = [];
         })
         .catch((err) => {
           NotificationError({
             title: "购买失败",
           });
         });
-      payModalConfig.loading = false
-      payModalConfig.selectPay = 0
-      payModalConfig.visible = false
+      payModalConfig.loading = false;
+      payModalConfig.selectPay = 0;
+      payModalConfig.visible = false;
     }
 
     function payModalCancel() {
@@ -339,6 +336,28 @@ export default {
       return money;
     }
 
+    pageChange(pageConfig.defaultCurrent);
+    function pageChange(num) {
+      console.log(num);
+      // 获取所有产品
+      store
+        .dispatch("productstore/getProducts", {
+          pageNo: num,
+          pageSize: pageConfig.pageSize,
+        })
+        .then((res) => {
+          let { total, current, pages } = res;
+          pageConfig.total = total;
+          pageConfig.current = current;
+          pageConfig.defaultCurrent = pages;
+        })
+        .catch((err) => {
+          MessageWarning({
+            content: "获取数据失败",
+          });
+        });
+    }
+
     return {
       pageConfig,
       products,
@@ -358,6 +377,7 @@ export default {
       payModalCancel,
       payModalClose,
       getPayMoney,
+      pageChange,
     };
   },
 };

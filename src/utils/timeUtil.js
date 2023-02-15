@@ -1,10 +1,20 @@
-export function timestampFormat(ts){
-  let date = new Date(ts)
-  let Y = date.getFullYear() + '-';
-  let M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
-  let D = date.getDate() + ' ';
-  let h = date.getHours() + ':';
-  let m = date.getMinutes() + ':';
-  let s = date.getSeconds();
-  return Y+M+D+h+m+s;
+//转换年月日方法
+export function timestampFormat(ts) {
+  var oDate = new Date(ts),
+    oYear = oDate.getFullYear(),
+    oMonth = oDate.getMonth() + 1,
+    oDay = oDate.getDate(),
+    oHour = oDate.getHours(),
+    oMin = oDate.getMinutes(),
+    oSec = oDate.getSeconds();
+  var oTime = ''
+  oTime = oYear + '-' + getzf(oMonth) + '-' + getzf(oDay) + ' ' + getzf(oHour) + ':' + getzf(oMin) + ':' + getzf(oSec); //最后拼接时间
+  return oTime;
+}
+//补0操作  
+function getzf(num) {
+  if (parseInt(num) < 10) {
+    num = '0' + num;
+  }
+  return num;
 }
